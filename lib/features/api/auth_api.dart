@@ -50,4 +50,32 @@ class AuthAPI {
       return left(Failure(message: e.toString(), stackTrace: st));
     }
   }
+
+  FutureEithervoid login(String email, String password) async {
+    try {
+      await account.createEmailSession(email: email, password: password);
+      return right(null);
+    } on AppwriteException catch (e, st) {
+      return left(Failure(
+          message: e.message ?? 'unkonw error occured', stackTrace: st));
+    } catch (e, st) {
+      return left(Failure(message: e.toString(), stackTrace: st));
+    }
+  }
+
+  Future<Session?> checkLoginSession() async {
+    final Session? session = await account.getSession(sessionId: 'current');
+    return session;
+  }
+
+  Future<Document> getCurrentUser() async {
+    final user = await account.get();
+    final document = await db.listDocuments(
+        databaseId: AppwriteConstants.databasesId,
+        collectionId: AppwriteConstants.userCollectionId,
+        queries: [
+          Query.equal('uid', user.$id),
+        ]);
+    return document.documents.first;
+  }
 }

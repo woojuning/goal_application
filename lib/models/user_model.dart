@@ -34,7 +34,7 @@ class UserModel {
     return UserModel(
       email: map['email'] as String,
       name: map['name'] as String,
-      uid: map['\$id'] as String,
+      uid: map['uid'] as String,
     );
   }
 

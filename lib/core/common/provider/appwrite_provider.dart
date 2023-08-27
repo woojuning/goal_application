@@ -17,3 +17,7 @@ final accountProvider = Provider((ref) {
 final databasesProvider = Provider((ref) {
   return Databases(ref.watch(clientProvider));
 });
+
+final realtimeProvider = Provider((ref) {
+  return Realtime(ref.watch(clientProvider));
+});

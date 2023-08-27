@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_goal_app/features/auth/controller/auth_controller.dart';
 
 import 'package:my_goal_app/features/auth/widget/signup_widget.dart';
 import 'package:my_goal_app/theme/pallete.dart';
@@ -93,7 +94,13 @@ class _LoginWidgetState extends ConsumerState<LoginWidget> {
                   right: 30,
                 ),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    ref.read(authControllerProvider.notifier).login(
+                          emailController.text,
+                          passwordController.text,
+                          context,
+                        );
+                  },
                   child: Text('Login'),
                 ),
               ),
