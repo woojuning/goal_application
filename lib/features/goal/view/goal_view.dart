@@ -20,30 +20,19 @@ class GoalView extends ConsumerWidget {
           '목표 리스트',
           style: TextStyle(color: Pallete.whiteColor),
         ),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(
-              right: 20,
-            ),
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              color: const Color.fromARGB(255, 180, 158, 184),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: IconButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return CreateGaolWidget();
-                    },
-                  );
-                },
-                icon: Icon(Icons.add)),
-          )
-        ],
       ),
       body: GoalListWidget(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return CreateGaolWidget();
+            },
+          );
+        },
+        child: Icon(Icons.add),
+      ),
     );
   }
 }

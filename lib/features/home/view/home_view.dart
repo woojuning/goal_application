@@ -4,6 +4,7 @@ import 'package:my_goal_app/core/common/side_drawer.dart';
 import 'package:my_goal_app/features/goal/view/goal_view.dart';
 import 'package:my_goal_app/features/home/home_common/index_state.dart';
 import 'package:my_goal_app/features/home/widget/home_bottom_widget.dart';
+import 'package:my_goal_app/features/home/widget/home_widget.dart';
 import 'package:my_goal_app/theme/pallete.dart';
 
 class HomeView extends ConsumerStatefulWidget {
@@ -24,23 +25,29 @@ class _HomeViewState extends ConsumerState<HomeView> {
     return Scaffold(
       drawer: SideDrawer(),
       backgroundColor: Pallete.backgroundColor,
-      appBar: AppBar(
-          backgroundColor: Pallete.backgroundColor,
-          title: Text(
-            'home view',
-            style: TextStyle(color: Pallete.whiteColor),
-          )),
+      // appBar: AppBar(
+      //     backgroundColor: Pallete.backgroundColor,
+      //     title: Text(
+      //       'home view',
+      //       style: TextStyle(color: Pallete.whiteColor),
+      //     )),
       body: IndexedStack(
         index: ref.watch(tabIndexProvider),
         children: [
-          Text(
-            'homeview',
-            style: TextStyle(color: Pallete.whiteColor),
-          ),
+          HomeWidget(),
           GoalView(),
         ],
       ),
-      bottomNavigationBar: HomeBottomWidget(),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Pallete.greyColor,
+            ),
+          ),
+        ),
+        child: HomeBottomWidget(),
+      ),
     );
   }
 }

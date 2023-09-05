@@ -41,6 +41,27 @@
             "type": "dart",
             "flutterMode": "debug",
             "deviceId": "Chrome"
+        },
+        {
+            "name": "windows",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "deviceId": "Windows"
+        },
+        {
+            "name": "우준이폰",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "deviceId": "SM A346N"
+        },
+        {
+            "name": "우준이폰2",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "deviceId": "SM A346N"
         }
     ],
     "compounds": [

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_goal_app/core/common/show_snackbar.dart';
 import 'package:my_goal_app/features/api/auth_api.dart';
+import 'package:my_goal_app/features/auth/view/login_view.dart';
 import 'package:my_goal_app/features/home/view/home_view.dart';
 import 'package:my_goal_app/models/user_model.dart';
 
@@ -53,6 +54,16 @@ class AuthController extends StateNotifier<bool> {
 
   Future<UserModel> getCurrentUser() async {
     final document = await authAPI.getCurrentUser();
+    print(UserModel.fromMap(document.data));
     return UserModel.fromMap(document.data);
+  }
+
+  void logout(BuildContext context) async {
+    final res = await authAPI.logout();
+    res.fold((l) => print('실패'), (r) {
+      print('성공');
+      Navigator.pushAndRemoveUntil(
+          context, LoginView.route(), (route) => false);
+    });
   }
 }

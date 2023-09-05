@@ -5,4 +5,6 @@ class AppwriteConstants {
   static String databasesId = '64ea17875363737f97c9';
   static String userCollectionId = '64ea178b92f3a4292682';
   static String goalCollectionId = '64eb071f70a773d307e3';
+  static String todoCollectionId = '64ef092d40c824cb9d77';
+  static String dailysCollectionId = '64f065475a9974b98a7f';
 }

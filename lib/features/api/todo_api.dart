@@ -8,27 +8,27 @@ import 'package:my_goal_app/core/common/failure.dart';
 import 'package:my_goal_app/core/common/provider/appwrite_provider.dart';
 import 'package:my_goal_app/core/common/type_def.dart';
 import 'package:my_goal_app/models/goal_model.dart';
+import 'package:my_goal_app/models/todo_model.dart';
 
-final goalAPIProvider = Provider((ref) {
-  return GoalAPI(
-      db: ref.watch(databasesProvider),
-      realtime: ref.watch(realtimeProvider),
-      account: ref.watch(accountProvider));
+final todoAPIProvider = Provider((ref) {
+  return TodoAPI(
+    db: ref.watch(databasesProvider),
+    realtime: ref.watch(realtimeTodoProvider),
+  );
 });
 
-class GoalAPI {
+class TodoAPI {
   final Databases db;
   final Realtime realtime;
-  final Account account;
-  GoalAPI({required this.db, required this.realtime, required this.account});
+  TodoAPI({required this.db, required this.realtime});
 
-  FutureEithervoid createGoalDocument(GoalModel goalModel) async {
+  FutureEithervoid createTodo(TodoModel todoModel) async {
     try {
       await db.createDocument(
         databaseId: AppwriteConstants.databasesId,
-        collectionId: AppwriteConstants.goalCollectionId,
+        collectionId: AppwriteConstants.todoCollectionId,
         documentId: ID.unique(),
-        data: goalModel.toMap(),
+        data: todoModel.toMap(),
       );
       return right(null);
     } on AppwriteException catch (e, st) {
@@ -39,33 +39,36 @@ class GoalAPI {
     }
   }
 
-  Stream<RealtimeMessage> getRealTimeGoal() {
-    return realtime.subscribe([
-      'databases.${AppwriteConstants.databasesId}.collections.${AppwriteConstants.goalCollectionId}.documents',
-    ]).stream;
-  }
-
-  Future<List<Document>> getGoalDocuments() async {
-    final currentUser = await account.get();
+  Future<List<Document>> getTodosByDateAndGoal(
+      DateTime date, GoalModel goalModel) async {
     final documents = await db.listDocuments(
-        databaseId: AppwriteConstants.databasesId,
-        collectionId: AppwriteConstants.goalCollectionId,
-        queries: [
-          Query.equal('uid', currentUser.$id),
-        ]);
+      databaseId: AppwriteConstants.databasesId,
+      collectionId: AppwriteConstants.todoCollectionId,
+      queries: [
+        Query.equal('date', date.millisecondsSinceEpoch),
+        Query.equal('goalId', goalModel.id),
+      ],
+    );
+    print(documents.documents);
     return documents.documents;
   }
 
-  //노력한 시간 업데이트
-  FutureEithervoid updateDoTime(GoalModel goalModel, double doTime) async {
+  Stream<RealtimeMessage> getRealTimeTodo() {
+    return realtime.subscribe([
+      'databases.${AppwriteConstants.databasesId}.collections.${AppwriteConstants.todoCollectionId}.documents'
+    ]).stream;
+  }
+
+  FutureEithervoid updateTodo_IsDone(TodoModel todoModel) async {
     try {
       await db.updateDocument(
-          databaseId: AppwriteConstants.databasesId,
-          collectionId: AppwriteConstants.goalCollectionId,
-          documentId: goalModel.id,
-          data: {
-            'doTime': goalModel.doTime + doTime,
-          });
+        databaseId: AppwriteConstants.databasesId,
+        collectionId: AppwriteConstants.todoCollectionId,
+        documentId: todoModel.id,
+        data: {
+          'isDone': todoModel.isDone,
+        },
+      );
       return right(null);
     } on AppwriteException catch (e, st) {
       return left(Failure(
@@ -75,12 +78,12 @@ class GoalAPI {
     }
   }
 
-  FutureEithervoid deleteGoalModel(GoalModel goalModel) async {
+  FutureEithervoid deleteTodo(TodoModel todoModel) async {
     try {
       await db.deleteDocument(
         databaseId: AppwriteConstants.databasesId,
-        collectionId: AppwriteConstants.goalCollectionId,
-        documentId: goalModel.id,
+        collectionId: AppwriteConstants.todoCollectionId,
+        documentId: todoModel.id,
       );
       return right(null);
     } on AppwriteException catch (e, st) {

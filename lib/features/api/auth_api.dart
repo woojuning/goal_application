@@ -63,9 +63,14 @@ class AuthAPI {
     }
   }
 
-  Future<Session?> checkLoginSession() async {
-    final Session? session = await account.getSession(sessionId: 'current');
-    return session;
+  Future<User?> checkLoginSession() async {
+    try {
+      return await account.get();
+    } on AppwriteException catch (e, st) {
+      return null;
+    } catch (e, st) {
+      return null;
+    }
   }
 
   Future<Document> getCurrentUser() async {
@@ -77,5 +82,17 @@ class AuthAPI {
           Query.equal('uid', user.$id),
         ]);
     return document.documents.first;
+  }
+
+  FutureEithervoid logout() async {
+    try {
+      await account.deleteSession(sessionId: 'current');
+      return right(null);
+    } on AppwriteException catch (e, st) {
+      return left(Failure(
+          message: e.message ?? 'unkonw error occured', stackTrace: st));
+    } catch (e, st) {
+      return left(Failure(message: e.toString(), stackTrace: st));
+    }
   }
 }

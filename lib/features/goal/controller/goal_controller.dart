@@ -28,13 +28,17 @@ class GoalController extends StateNotifier<bool> {
       UserModel currentUserModel, BuildContext context) async {
     final goalModel = GoalModel(
       goal: goal,
-      amountTime: int.parse(amountTime),
+      amountTime: double.parse(amountTime),
       doTime: 0,
       declarationTime: DateTime.now(),
       uid: currentUserModel.uid,
+      id: '',
     );
     final res = await goalAPI.createGoalDocument(goalModel);
-    res.fold((l) => showSnackBar(l.message, context), (r) {
+    res.fold((l) {
+      showSnackBar(l.message, context);
+      print(l.message);
+    }, (r) {
       Navigator.pop(context);
     });
   }
@@ -42,5 +46,15 @@ class GoalController extends StateNotifier<bool> {
   Future<List<GoalModel>> getGoalDocuments() async {
     final documents = await goalAPI.getGoalDocuments();
     return documents.map((e) => GoalModel.fromMap(e.data)).toList();
+  }
+
+  void updateDoTime(GoalModel goalModel, double doTime) async {
+    final res = await goalAPI.updateDoTime(goalModel, doTime);
+    res.fold((l) => print(l.message), (r) => null);
+  }
+
+  void deleteGoalModel(GoalModel goalModel) async {
+    final res = await goalAPI.deleteGoalModel(goalModel);
+    res.fold((l) => null, (r) => null);
   }
 }

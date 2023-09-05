@@ -19,12 +19,11 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       home: ref.watch(checkLoginSessionProvider).when(
-            data: (session) {
-              if (session == null) {
+            data: (user) {
+              if (user == null) {
                 return LoginView();
               }
               return HomeView();

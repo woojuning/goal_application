@@ -21,3 +21,7 @@ final databasesProvider = Provider((ref) {
 final realtimeProvider = Provider((ref) {
   return Realtime(ref.watch(clientProvider));
 });
+
+final realtimeTodoProvider = Provider((ref) {
+  return Realtime(ref.watch(clientProvider));
+});
